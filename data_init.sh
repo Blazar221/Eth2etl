@@ -10,10 +10,10 @@ mysql -u ${ACCOUNT} -p${PASSWORD} -e "
 		aggregation_bits varchar(255) not null,
 		slot int unsigned,
 		committee_index mediumint unsigned,
-		block_root char(44) not null,
+		block_root char(43) not null,
 		source_epoch int unsigned,
-		source_root char(44) not null,
+		source_root char(43) not null,
 		target_epoch int unsigned,
-		target_root char(44) not null,
+		target_root char(43) not null,
 		signature char(128))engine=myisam default charset=gbk;
 "
