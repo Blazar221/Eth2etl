@@ -3,12 +3,17 @@ import api_service
 import base_service
 import data_service
 
+
 if __name__ == '__main__':
 	print('begin')
-	raw_data = api_service.attestations_epoch(2, pageSize = 2)
-	attestation_array = base_service.json_to_attestation_array(raw_data)	
-	for each in attestation_array:
-		print(each)
-	data_service.attestation_insert(attestation_array)
+	raw_data = api_service.block_epoch(1, pageSize = 2)
+	for each in raw_data['blockContainers']:
+		for key in each.keys():
+			if key == 'block':
+				for k in each[key][key].keys():
+					print('{}:{}'.format(k, each[key][key][k]))
+			else:
+				print('{}:{}'.format(key, each[key]))
+			print('-------------------------------------------')
 	print('end')
 
