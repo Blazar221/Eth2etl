@@ -4,7 +4,7 @@ def safe_url_base64(base64):
 
 
 # Mysql database don't allow the appearance of '=' in data, so before saving it, '=' at the end of the string should be eliminated.
-def db_parse(root):
-	return root.replace('=','')
+def db_parse(s):
+	return s[:-1] if s[-1] == '=' else s
 
 

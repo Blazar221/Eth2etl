@@ -1,4 +1,5 @@
 #!/bin/bash
+#This script can only work after running data_init first
 ACCOUNT='root'
 PASSWORD='root'
 
