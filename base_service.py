@@ -2,7 +2,8 @@ import api_service
 import parse_service
 import data_service
 from head_info import *
-
+from constant import DATA_BUFFER
+	
 
 def save_block_epoch(begin_epoch, end_epoch):
 	blocks = []
@@ -36,14 +37,44 @@ def save_block_epoch(begin_epoch, end_epoch):
 			data_service.slashinga_insert(slashingas)
 		if slashingps:
 			data_service.slashingp_insert(slashingps)
+		# Clear all array and prepare for the next epoch
 		blocks = []
 		deposits = []
 		exits = []
 		slashingas = []
 		slashingps = []
 		attestations = []
-		
+
+
+# Probably the validators data of each epoch will have a large common part, thus save the data of head epoch is enough.
+def save_vld_epoch(epoch):
+	json = api_service.validators_epoch(epoch)
+	res_array = parse_service.json_to_validator_array(json)
+	if res_array:
+		for i in range(0, len(res_array)/DATA_BUFFER):
+			data_service.validator_insert(res_array[i*DATA_BUFFER, (i+1)*DATA_BUFFER])
 	
+
+def read_attestation(**kwargs):
+	return parse_service.data_to_attestation_array(data_service.attestation_query(**kwargs))
+	
+
+def read_block(**kwargs):
+	return parse_service.data_to_block_array(data_service.block_query(**kwargs))
+
+
+def read_deposit(**kwargs):
+	return parse_service.data_to_deposit_array(data_service.deposit_query(**kwargs))
+
+
+def read_slashinga(**kwargs):
+	return parse_service.data_to_slashinga_array(data_service.slashinga_query(**kwargs))
+
+
+def read_slashingp(**kwargs):
+	return parse_service.data_to_slashingp_array(data_service.slashingp_query(**kwargs))
+
+
 # Get the current information about the beacon chain head and so on.
 def get_current_head():
 	raw_data = api_service.chainhead()

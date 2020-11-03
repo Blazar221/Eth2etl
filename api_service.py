@@ -1,7 +1,7 @@
 #!usr/bin/python3
 import requests
 import encode
-from config import prysm_address as address
+from config import PRYSM_ADDRESS as address
 
 
 def attestations_epoch(epoch, pageSize = None, pageToken = None):
@@ -124,6 +124,11 @@ def validators_epoch(epoch, active = False, indices = [], public_keys = [], page
 		url = url + '&pageSize={}'.format(pageSize)
 	if pageToken:
 		url = url + '&pageToken={}'.format(pageToken)	
+	return requests.get(url).json()
+
+
+def validators_default():
+	url = address + 'eth/v1alpha1/validators'
 	return requests.get(url).json()
 	
 

@@ -8,6 +8,7 @@ mysql -u ${ACCOUNT} -p${PASSWORD} -e "
 	create database if not exists eth2data;
 	use eth2data;
 	create table if not exists attestation(
+		inclusion_slot int unsigned,
 		aggr_bits varchar(255) not null,
 		slot int unsigned,
 		cmt_index mediumint unsigned,
@@ -38,7 +39,7 @@ mysql -u ${ACCOUNT} -p${PASSWORD} -e "
 		block_root char(43) not null,
 		pub_key char(64) not null,
 		withdraw_cred char(43) not null,
-		amount int unsigned,
+		amount tinyint,
 		sign char(128) not null)engine=myisam default charset=gbk;
 	create table if not exists proof(
 		slot int unsigned,
@@ -81,5 +82,16 @@ mysql -u ${ACCOUNT} -p${PASSWORD} -e "
 		parent_root2 char(43) not null,
 		state_root2 char(43) not null,
 		body_root2 char(43) not null,
-		sign2 char(128) not null)engine=myisam default charset=gbk;		
+		sign2 char(128) not null)engine=myisam default charset=gbk;	
+	create table if not exists validator(
+		id mediumint unsigned,
+		pub_key char(64) not null,
+		withdraw_cred char(43) not null,
+		e_balance tinyint,
+		slashed boolean,
+		act_eli_epoch mediumint unsigned,
+		act_epoch mediumint unsigned,
+		exit_epoch mediumint unsigned,
+		withdraw_epoch mediumint unsigned,
+		primary key (id))engine=myisam default charset=gbk;			
 "
