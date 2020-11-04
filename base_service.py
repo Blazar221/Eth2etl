@@ -8,20 +8,20 @@ from constant import DATA_BUFFER
 def save_block_epoch(begin_epoch, end_epoch):
 	blocks = []
 	deposits = []
-	exits = []
+	exitings = []
 	slashingas = []
 	slashingps = []
 	attestations = []
 	for i in range(begin_epoch, end_epoch + 1):
 		json = api_service.block_epoch(i)
 		res_array = parse_service.json_to_block_array(json)
-		for block, deposit_array, exit_array, slashinga_array, slashingp_array, attestation_array in res_array:
+		for block, deposit_array, exiting_array, slashinga_array, slashingp_array, attestation_array in res_array:
 			blocks.append(block)
 			attestations.extend(attestation_array)
 			if block.has_dpst:
 				deposits.extend(deposit_array)
-			if block.has_exit:
-				exits.extend(exit_array)
+			if block.has_exiting:
+				exitings.extend(exiting_array)
 			if block.has_sa:
 				slashingas.extend(slashinga_array)
 			if block.has_sp:
@@ -31,8 +31,8 @@ def save_block_epoch(begin_epoch, end_epoch):
 		data_service.attestation_insert(attestations)
 		if deposits:
 			data_service.deposit_insert(deposits)
-		if exits:
-			data_service.exit_insert(exits)
+		if exitings:
+			data_service.exiting_insert(exitings)
 		if slashingas:
 			data_service.slashinga_insert(slashingas)
 		if slashingps:
@@ -40,7 +40,7 @@ def save_block_epoch(begin_epoch, end_epoch):
 		# Clear all array and prepare for the next epoch
 		blocks = []
 		deposits = []
-		exits = []
+		exitings = []
 		slashingas = []
 		slashingps = []
 		attestations = []
@@ -48,11 +48,17 @@ def save_block_epoch(begin_epoch, end_epoch):
 
 # Probably the validators data of each epoch will have a large common part, thus save the data of head epoch is enough.
 def save_vld_epoch(epoch):
+	res_array = []
 	json = api_service.validators_epoch(epoch)
-	res_array = parse_service.json_to_validator_array(json)
+	while json['nextPageToken']:
+		res_array.extend(parse_service.json_to_validator_array(json))
+		json = api_service.validators_epoch(epoch, pageToken = json['nextPageToken'])
+	res_array.extend(parse_service.json_to_validator_array(json))
+	print(len(res_array))
 	if res_array:
-		for i in range(0, len(res_array)/DATA_BUFFER):
-			data_service.validator_insert(res_array[i*DATA_BUFFER, (i+1)*DATA_BUFFER])
+		for i in range(0, int(len(res_array)/DATA_BUFFER)+1):
+			print('insert from {} to {}'.format(i*DATA_BUFFER, (i+1)*DATA_BUFFER))
+			data_service.validator_insert(res_array[i*DATA_BUFFER:(i+1)*DATA_BUFFER])
 	
 
 def read_attestation(**kwargs):
@@ -73,6 +79,10 @@ def read_slashinga(**kwargs):
 
 def read_slashingp(**kwargs):
 	return parse_service.data_to_slashingp_array(data_service.slashingp_query(**kwargs))
+
+
+def read_validator(**kwargs):
+	return parse_service.data_to_validator_array(data_service.validator_query(**kwargs))
 
 
 # Get the current information about the beacon chain head and so on.

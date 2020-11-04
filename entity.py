@@ -19,7 +19,7 @@ class attestation:
 
 
 class block:
-	def __init__(self, slot, prop_index, parent_root, state_root, randao_reveal, grff, sign, block_root, dpst_root, dpst_count, block_hash, has_dpst, has_exit, has_sa, has_sp):
+	def __init__(self, slot, prop_index, parent_root, state_root, randao_reveal, grff, sign, block_root, dpst_root, dpst_count, block_hash, has_dpst, has_exiting, has_sa, has_sp):
 		self.slot = slot
 		self.prop_index = prop_index
 		self.parent_root = parse(parent_root)
@@ -32,13 +32,13 @@ class block:
 		self.dpst_count = dpst_count
 		self.block_hash = parse(block_hash)
 		self.has_dpst = has_dpst
-		self.has_exit = has_exit
+		self.has_exiting = has_exiting
 		self.has_sa = has_sa
 		self.has_sp = has_sp
 
 
 	def __repr__(self):
-		return 'slot={},prop_index={},parent_root={},state_root={},randao_reveal={},grff={}, sign={}, block_root={},dpst_root={},dpst_count={},block_hash={},has_dpst={},has_exit={},has_sa={},has_sp={}'.format(self.slot, self.prop_index, self.parent_root, self.state_root, self.randao_reveal, self.grff, self.sign, self.block_root, self.dpst_root, self.dpst_count, self.block_hash, self.has_dpst, self.has_exit, self.has_sa, self.has_sp)
+		return 'slot={},prop_index={},parent_root={},state_root={},randao_reveal={},grff={}, sign={}, block_root={},dpst_root={},dpst_count={},block_hash={},has_dpst={},has_exiting={},has_sa={},has_sp={}'.format(self.slot, self.prop_index, self.parent_root, self.state_root, self.randao_reveal, self.grff, self.sign, self.block_root, self.dpst_root, self.dpst_count, self.block_hash, self.has_dpst, self.has_exiting, self.has_sa, self.has_sp)
 
 
 class deposit:
@@ -56,12 +56,12 @@ class deposit:
 		return 'slot={}, block_root={},proof={},pub_key={},withdraw_cred={},amount={},sign={}'.format(self.slot, self.block_root, self.proof, self.pub_key, self.withdraw_cred, self.amount, self.sign)
 	
 
-class exit:
-	def __init__(self, slot, block_root, exit_epoch, validator_index, sign):
+class exiting:
+	def __init__(self, slot, block_root, exit_epoch, vld_index, sign):
 		self.slot = slot
-		self.block_root = block_root
+		self.block_root = parse(block_root)
 		self.exit_epoch = exit_epoch
-		self.validator_index = validator_index
+		self.vld_index = vld_index
 		self.sign = sign
 
 
@@ -122,7 +122,7 @@ class validator:
 	def __init__(self, index, pub_key, withdraw_cred, e_balance, slashed, act_eli_epoch, act_epoch, exit_epoch, withdraw_epoch):
 		self.index = index
 		self.pub_key = pub_key
-		self.withdraw_cred = withdraw_cred
+		self.withdraw_cred = parse(withdraw_cred)
 		self.e_balance = e_balance
 		self.slashed = slashed
 		self.act_eli_epoch = act_eli_epoch

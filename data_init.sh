@@ -41,6 +41,12 @@ mysql -u ${ACCOUNT} -p${PASSWORD} -e "
 		withdraw_cred char(43) not null,
 		amount tinyint,
 		sign char(128) not null)engine=myisam default charset=gbk;
+	create table if not exists exiting(
+		slot int unsigned,
+		block_root char(43) not null,
+		exit_epoch mediumint unsigned,
+		vld_index mediumint unsigned,
+		sign char(128) not null)engine=myisam default charset=gbk;
 	create table if not exists proof(
 		slot int unsigned,
 		block_root char(43) not null,
@@ -87,11 +93,11 @@ mysql -u ${ACCOUNT} -p${PASSWORD} -e "
 		id mediumint unsigned,
 		pub_key char(64) not null,
 		withdraw_cred char(43) not null,
-		e_balance tinyint,
+		e_balance mediumint unsigned,
 		slashed boolean,
 		act_eli_epoch mediumint unsigned,
 		act_epoch mediumint unsigned,
-		exit_epoch mediumint unsigned,
-		withdraw_epoch mediumint unsigned,
+		exit_epoch bigint unsigned,
+		withdraw_epoch bigint unsigned,
 		primary key (id))engine=myisam default charset=gbk;			
 "

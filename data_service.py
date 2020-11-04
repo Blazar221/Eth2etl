@@ -17,7 +17,7 @@ def attestation_query(**kwargs):
 def block_insert(block_array):
 	sql_values = ""
 	for item in block_array:
-		sql_values = sql_values + "({}, {}, '{}', '{}', '{}', '{}', '{}', '{}', '{}', {}, '{}', {}, {}, {}, {}),".format(item.slot, item.prop_index, item.parent_root, item.state_root, item.randao_reveal, item.grff, item.sign, item.block_root, item.dpst_root, item.dpst_count, item.block_hash, item.has_dpst, item.has_exit, item.has_sa, item.has_sp)
+		sql_values = sql_values + "({}, {}, '{}', '{}', '{}', '{}', '{}', '{}', '{}', {}, '{}', {}, {}, {}, {}),".format(item.slot, item.prop_index, item.parent_root, item.state_root, item.randao_reveal, item.grff, item.sign, item.block_root, item.dpst_root, item.dpst_count, item.block_hash, item.has_dpst, item.has_exiting, item.has_sa, item.has_sp)
 	__insert_array('block', sql_values)
 
 
@@ -42,6 +42,13 @@ def deposit_query(**kwargs):
 	for each in data:
 		proof_data.append(__query_all('proof', slot = each[0], block_root = each[1]))
 	return data, proof_data
+
+
+def exiting_insert(ex_array):
+	sql_values = ""
+	for item in ex_array:
+		sql_values = sql_values + "({}, '{}', {}, {}, '{}'),".format(item.slot, item.block_root, item.exit_epoch, item.vld_index, item.sign)
+	__insert_array('slashingp', sql_values)
 
 
 def slashinga_insert(sa_array):
@@ -79,7 +86,7 @@ def slashingp_query(**kwargs):
 def validator_insert(vld_array):
 	sql_values = ""
 	for item in vld_array:
-		sql_values = sql_values + "({}, '{}', '{}', {}, {}, {}, {}, {}, {})".format(item.index, item.pub_key, item.withdraw_cred, item.e_balance, item.slashed, item.act_eli_epoch, item.act_epoch, item.exit_epoch, item.withdraw_epoch)
+		sql_values = sql_values + "({}, '{}', '{}', {}, {}, '{}', '{}', '{}', '{}'),".format(item.index, item.pub_key, item.withdraw_cred, item.e_balance, item.slashed, item.act_eli_epoch, item.act_epoch, item.exit_epoch, item.withdraw_epoch)
 	__insert_array('validator', sql_values)
 
 
@@ -101,13 +108,15 @@ def __query_all(table, **kwargs):
 	if kwargs:
 		sql_values = ''
 		for key in kwargs.keys():
-			if kwargs[key]: # The parameter shouldn't be none
-				if(type(kwargs[key]) == type('a')): # String parameter need quotation
+			if kwargs[key] is not None: # The parameter shouldn't be none
+				value = kwargs[key]
+				if type(value) == type('a') and len(value) > 0: # String parameter need quotation
 					sql_values = sql_values + " {}='{}' and".format(key, kwargs[key])
 				else:
 					sql_values = sql_values + " {}={} and".format(key, kwargs[key])
 		if sql_values:
 					sql = sql + ' where' + sql_values[:-3]
+	print(sql)
 	db = __connect_db()
 	cursor = db.cursor()
 	cursor.execute(sql)
