@@ -35,24 +35,20 @@ mysql -u ${ACCOUNT} -p${PASSWORD} -e "
 		has_sa boolean,
 		has_sp boolean)engine=myisam default charset=gbk;
 	create table if not exists deposit(
-		slot int unsigned,
 		block_root char(43) not null,
 		pub_key char(64) not null,
 		withdraw_cred char(43) not null,
 		amount tinyint,
 		sign char(128) not null)engine=myisam default charset=gbk;
 	create table if not exists exiting(
-		slot int unsigned,
 		block_root char(43) not null,
 		exit_epoch mediumint unsigned,
 		vld_index mediumint unsigned,
 		sign char(128) not null)engine=myisam default charset=gbk;
 	create table if not exists proof(
-		slot int unsigned,
 		block_root char(43) not null,
 		value char(43) not null)engine=myisam default charset=gbk;		
 	create table if not exists slashinga(
-		slot int unsigned,
 		block_root char(43) not null,
 		slot1 int unsigned,
 		cmt_index1 mediumint unsigned,
@@ -71,12 +67,10 @@ mysql -u ${ACCOUNT} -p${PASSWORD} -e "
 		trgt_root2 char(43) not null,
 		sign2 char(128) not null)engine=myisam default charset=gbk;
 	create table if not exists slashinga_vld(
-		slot int unsigned,
 		block_root char(43) not null,
 		vld_index mediumint unsigned,
 		first boolean)engine=myisam default charset=gbk;
 	create table if not exists slashingp(
-		slot int unsigned,
 		block_root char(43) not null,
 		vld_index mediumint unsigned,
 		slot1 int unsigned,

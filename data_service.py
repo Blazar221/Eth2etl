@@ -29,9 +29,9 @@ def deposit_insert(deposit_array):
 	sql_values = ""
 	sql_proof_values = ""
 	for item in deposit_array:
-		sql_values = sql_values + "({}, '{}', '{}', '{}', {}, '{}'),".format(item.slot, item.block_root, item.pub_key, item.withdraw_cred, item.amount, item.sign)
+		sql_values = sql_values + "('{}', '{}', '{}', {}, '{}'),".format(item.block_root, item.pub_key, item.withdraw_cred, item.amount, item.sign)
 		for each_proof in item.proof:
-			sql_proof_values = sql_proof_values + "({}, '{}', '{}'),".format(item.slot, item.block_root, each_proof)
+			sql_proof_values = sql_proof_values + "('{}', '{}'),".format(item.block_root, each_proof)
 	__insert_array('deposit', sql_values)
 	__insert_array('proof', sql_proof_values)
 
@@ -40,14 +40,14 @@ def deposit_query(**kwargs):
 	data = __query_all('deposit', **kwargs)
 	proof_data = []
 	for each in data:
-		proof_data.append(__query_all('proof', slot = each[0], block_root = each[1]))
+		proof_data.append(__query_all('proof', block_root = each[0]))
 	return data, proof_data
 
 
 def exiting_insert(ex_array):
 	sql_values = ""
 	for item in ex_array:
-		sql_values = sql_values + "({}, '{}', {}, {}, '{}'),".format(item.slot, item.block_root, item.exit_epoch, item.vld_index, item.sign)
+		sql_values = sql_values + "('{}', {}, {}, '{}'),".format(item.block_root, item.exit_epoch, item.vld_index, item.sign)
 	__insert_array('slashingp', sql_values)
 
 
@@ -55,11 +55,11 @@ def slashinga_insert(sa_array):
 	sql_values = ""
 	sql_vld_values = ""
 	for item in sa_array:
-		sql_values = sql_values + "({}, '{}', {}, {}, '{}', {}, '{}', {}, '{}', '{}',{}, {}, '{}', {}, '{}', {}, '{}', '{}'),".format(item.slot, item.block_root, item.slot1, item.cmt_index1, item.block_root1, item.src_epoch1, item.src_root1, item.trgt_epoch1, item.trgt_root1, item.sign1, item.slot2, item.cmt_index2, item.block_root2, item.src_epoch2, item.src_root2, item.trgt_epoch2, item.trgt_root2, item.sign2)
+		sql_values = sql_values + "('{}', {}, {}, '{}', {}, '{}', {}, '{}', '{}',{}, {}, '{}', {}, '{}', {}, '{}', '{}'),".format(item.block_root, item.slot1, item.cmt_index1, item.block_root1, item.src_epoch1, item.src_root1, item.trgt_epoch1, item.trgt_root1, item.sign1, item.slot2, item.cmt_index2, item.block_root2, item.src_epoch2, item.src_root2, item.trgt_epoch2, item.trgt_root2, item.sign2)
 		for each_vld in item.indice1:
-			sql_vld_values = sql_vld_values + "({}, '{}', {}, {}),".format(item.slot, item.block_root, each_vld, True)
+			sql_vld_values = sql_vld_values + "('{}', {}, {}),".format(item.block_root, each_vld, True)
 		for each_vld in item.indice2:
-			sql_vld_values = sql_vld_values + "({}, '{}', {}, {}),".format(item.slot, item.block_root, each_vld, False)
+			sql_vld_values = sql_vld_values + "('{}', {}, {}),".format(item.block_root, each_vld, False)
 	__insert_array('slashinga', sql_values)
 	__insert_array('slashinga_vld', sql_vld_values)
 
@@ -68,14 +68,14 @@ def slashinga_query(**kwargs):
 	data = __query_all('slashinga', **kwargs)
 	vld_data = []
 	for each in data:
-		vld_data.append(__query_all('slashinga_vld', slot = each[0], block_root = each[1]))
+		vld_data.append(__query_all('slashinga_vld', block_root = each[0]))
 	return data, vld_data
 
 
 def slashingp_insert(sp_array):
 	sql_values = ""
 	for item in sp_array:
-		sql_values = sql_values + "({}, '{}', {}, {}, '{}', '{}', '{}', '{}', {}, '{}', '{}', '{}', '{}'),".format(item.slot, item.block_root, item.vld_index, item.slot1, item.parent_root1, item.state_root1, item.body_root1, item.sign1, item.slot2, item.parent_root2, item.state_root2, item.body_root2, item.sign2)
+		sql_values = sql_values + "('{}', {}, {}, '{}', '{}', '{}', '{}', {}, '{}', '{}', '{}', '{}'),".format(item.block_root, item.vld_index, item.slot1, item.parent_root1, item.state_root1, item.body_root1, item.sign1, item.slot2, item.parent_root2, item.state_root2, item.body_root2, item.sign2)
 	__insert_array('slashingp', sql_values)
 
 
