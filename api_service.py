@@ -1,6 +1,6 @@
 #!usr/bin/python3
 import requests
-import encode
+import encode_tool as encode
 from config import PRYSM_ADDRESS as address
 
 
