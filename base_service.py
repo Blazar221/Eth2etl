@@ -2,10 +2,14 @@ import api_service
 import parse_service
 import csv_service
 import time_tool
+import encode_tool
 from head_info import *
+from constant import SLOT_PER_EPOCH, CSV_NAME_MAP
 
 
-# TODO the miss block info is also needed
+# This method includes the retrieval of block data and committee data. 
+#
+# @return: Dicts of block data, block affiliated data and committee data. The key is the csv name identified standard. The value is the entity array. 
 def request_block_epoch(begin_epoch, end_epoch):
 	blocks = {}
 	attestations = {}
@@ -13,16 +17,24 @@ def request_block_epoch(begin_epoch, end_epoch):
 	exitings = {}
 	slashingas = {}
 	slashingps = {}
+	cmts = {}
 	for i in range(begin_epoch, end_epoch + 1):
-		json = api_service.block_epoch(i)
-		res_array = parse_service.json_to_block_array(json)
-		for block, deposit_array, exiting_array, slashinga_array, slashingp_array, attestation_array in res_array:
+		(prop_dict, cmt_array) = request_assignment_epoch(i)
+		# Currently the committee use epoch to identify csv
+		cmts[i] = cmt_array
+		slot_head = i * SLOT_PER_EPOCH
+		slot_end = slot_head + SLOT_PER_EPOCH		
+		res_array = parse_service.json_to_block_array(api_service.block_epoch(i))
+		for block, deposit_array, exiting_array, slashinga_array, slashingp_array, attestation_array in res_array: 
+			while block.slot > slot_head:
+				add_missed_block(slot_head, prop_dict[slot_head], blocks)
+				slot_head += 1	
 			day = time_tool.get_day_str(block.slot)
 			if day in blocks:
 				blocks[day].append(block)
 			else:
 				blocks[day] = [block]
-			sub_key_name = '{}_{}'.format(day, block.block_root)
+			sub_key_name = '{}_{}'.format(day, encode_tool.safe_url_base64(block.block_root))
 			attestations[sub_key_name] = attestation_array
 			if deposit_array:
 				deposits[sub_key_name] = deposits_array
@@ -32,8 +44,25 @@ def request_block_epoch(begin_epoch, end_epoch):
 				slashingas[sub_key_name] = slashinga_array
 			if slashingp_array:
 				slashingps[sub_key_name] = slashingp_array
-	return blocks, attestations, deposits, exitings, slashingas, slashingps
-			
+			slot_head += 1
+		while slot_head < slot_end:
+			add_missed_slot(slot_head, blocks)
+			slot_head += 1
+	return blocks, attestations, deposits, exitings, slashingas, slashingps, cmts
+
+
+# This method can retrieve both committee and missing block
+def request_assignment_epoch(epoch):		
+	assignment = []
+	info = api_service.validators_assignments_epoch(epoch)
+	while info['nextPageToken']:
+		assignment.extend(info['assignments'])
+		info = api_service.validators_assignments_epoch(epoch, pageToken = info['nextPageToken'])
+	assignment.extend(info['assignments'])
+	epoch_timestamp = time_tool.get_timestamp_epoch(epoch)
+	prop_dict, cmt = parse_service.json_to_prop_and_cmt(assignment, epoch_timestamp)
+	return prop_dict, cmt
+
 
 # Probably the validators data of each epoch will have a large common part, thus save the data of head epoch is enough.
 def request_vld_epoch(epoch):
@@ -46,29 +75,23 @@ def request_vld_epoch(epoch):
 	return vld_array
 
 
-def save_attestation_csv(attes):
-	data = []
-	for each in attes:
-		data.append(each.line())	
-	csv_service.save_csv('attestation', data)
-
-
-def save_blocks_csv(blocks):
-	for key in blocks:
+def save_csv(data_dict, name_key):
+	for key in data_dict:
 		data = []
-		for block in blocks[key]:
-			data.append(block.csv_line())
-		csv_service.save_csv('block_'+key, data)
+		for each in data_dict[key]:
+			data.append(each.csv_line())
+		csv_service.save_csv('{}{}'.format(CSV_NAME_MAP[name_key], key), data)
 
 
-def save_deposit_csv(dpst):
-	data = []
-	proof_data = []
-	for each in dpst:
-		tuple = dpst.line()
-		data.append(tuple[0], tuple[1], tuple[3], tuple[4], tuple[5], tuple[6])
+def add_missed_block(slot, prop, blocks):
+	day = time_tool.get_day_str(slot)
+	missed_block = parse_service.spawn_missed_block(slot, prop)
+	if day in blocks:
+		blocks[day].append(missed_block)
+	else:
+		blocks[day] = [missed_block]
 
-
+	
 # Get the current information about the beacon chain head and so on.
 def get_current_head():
 	raw_data = api_service.chainhead()

@@ -157,8 +157,10 @@ def validators_activesetchanges_genesis():
 	return requests.get(url).json()
 
 
-def validators_assignments_epoch(epoch, indices = [], public_keys = [], pageSize = None, pageToken = None):
+def validators_assignments_epoch(epoch, proposers = [], indices = [], public_keys = [], pageSize = None, pageToken = None):
 	url = address + 'eth/v1alpha1/validators/assignments?epoch={}'.format(epoch)
+	for item in proposers:
+		url = url + '&proposerSlots={}'.format(item)	
 	for item in public_keys:
 		url = url + '&publicKeys={}'.format(encode.safe_url_base64(item))
 	for item in indices:

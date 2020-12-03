@@ -12,6 +12,6 @@ DB = {
 METHOD = {'csv':0, 'db':1}
 USE_METHOD = METHOD['csv']
 # CSV spawning target location
-CSV_PATH = './'
+CSV_PATH = './output/'
 
 
