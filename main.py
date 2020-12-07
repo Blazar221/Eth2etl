@@ -1,13 +1,11 @@
 #!usr/bin/python3
-import api_service
-import base_service
+from service import base_service
 import time
-
 
 if __name__ == '__main__':	
 	begin_time = time.time()
 	print('begin')	
-	blocks, attestations, deposits, exitings, slashingas, slashingps, cmts = base_service.request_block_epoch(10, 12)
+	blocks, attestations, deposits, exitings, slashingas, slashingps, cmts = base_service.request_block_epoch(10, 11)
 	base_service.save_csv(blocks, 'block')
 	base_service.save_csv(attestations, 'attestation')
 	base_service.save_csv(deposits, 'deposit')

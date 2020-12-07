@@ -1,8 +1,7 @@
 import api_service
 import parse_service
 import csv_service
-import time_tool
-import encode_tool
+from utils import encode_tool, time_tool
 from head_info import *
 from constant import SLOT_PER_EPOCH, CSV_NAME_MAP
 
@@ -18,13 +17,17 @@ def request_block_epoch(begin_epoch, end_epoch):
 	slashingas = {}
 	slashingps = {}
 	cmts = {}
+	c = clock()
 	for i in range(begin_epoch, end_epoch + 1):
+		c.print_time()
 		(prop_dict, cmt_array) = request_assignment_epoch(i)
+		c.print_time()
 		# Currently the committee use epoch to identify csv
 		cmts[i] = cmt_array
 		slot_head = i * SLOT_PER_EPOCH
 		slot_end = slot_head + SLOT_PER_EPOCH		
 		res_array = parse_service.json_to_block_array(api_service.block_epoch(i))
+		c.print_time()		
 		for block, deposit_array, exiting_array, slashinga_array, slashingp_array, attestation_array in res_array: 
 			while block.slot > slot_head:
 				add_missed_block(slot_head, prop_dict[slot_head], blocks)
@@ -45,6 +48,7 @@ def request_block_epoch(begin_epoch, end_epoch):
 			if slashingp_array:
 				slashingps[sub_key_name] = slashingp_array
 			slot_head += 1
+			c.print_time()
 		while slot_head < slot_end:
 			add_missed_slot(slot_head, blocks)
 			slot_head += 1
@@ -79,7 +83,7 @@ def save_csv(data_dict, name_key):
 	for key in data_dict:
 		data = []
 		for each in data_dict[key]:
-			data.append(each.csv_line())
+			data.append(each.csv_format())
 		csv_service.save_csv('{}{}'.format(CSV_NAME_MAP[name_key], key), data)
 
 

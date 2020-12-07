@@ -1,4 +1,4 @@
-import time_tool
+from utils import time_tool
 from constant import SLOT_PER_EPOCH
 
 class attestation:
@@ -21,31 +21,6 @@ class attestation:
 	
 	def csv_line(self):
 		return (self.aggr_bits, self.slot, self.cmt_index, self.block_root, self.src_epoch, self.src_block, self.trgt_epoch, self.trgt_block, self.sign)
-
-
-class block:
-	def __init__(self, slot, prop_index, parent_root = None, state_root = None, randao_reveal = None, grff = None, sign = None, block_root = None, dpst_root = None, dpst_count = None, block_hash = None):
-		self.slot = int(slot)
-		self.prop_index = prop_index
-		self.parent_root = parent_root
-		self.state_root = state_root
-		self.randao_reveal = randao_reveal
-		self.grff = grff
-		self.sign = sign
-		self.block_root = block_root
-		self.dpst_root = dpst_root
-		self.dpst_count = dpst_count
-		self.block_hash = block_hash
-		self.skipped = (parent_root is None)
-
-
-	def __repr__(self):
-		return 'slot={},prop_index={},parent_root={},state_root={},randao_reveal={},grff={}, sign={}, block_root={},dpst_root={},dpst_count={},block_hash={}'.format(self.slot, self.prop_index, self.parent_root, self.state_root, self.randao_reveal, self.grff, self.sign, self.block_root, self.dpst_root, self.dpst_count, self.block_hash)
-	
-	
-	def csv_line(self):
-		return (self.slot, int(self.slot/SLOT_PER_EPOCH), time_tool.get_timestamp_slot(self.slot), self.prop_index, self.skipped, self.block_root, self.parent_root, self.state_root, self.randao_reveal, self.grff, self.block_hash, self.dpst_root, self.dpst_count, self.sign)
-
 
 class deposit:
 	def __init__(self, block_root, proof, pub_key, withdraw_cred, amount, sign):
