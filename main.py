@@ -1,17 +1,10 @@
 #!usr/bin/python3
-from service import base_service
+from service.base_service import extract_block
+import service.api_service as api
 import time
 
 if __name__ == '__main__':	
 	begin_time = time.time()
-	print('begin')	
-	blocks, attestations, deposits, exitings, slashingas, slashingps, cmts = base_service.request_block_epoch(10, 11)
-	base_service.save_csv(blocks, 'block')
-	base_service.save_csv(attestations, 'attestation')
-	base_service.save_csv(deposits, 'deposit')
-	base_service.save_csv(exitings, 'exiting')
-	base_service.save_csv(slashingas, 'slashinga')
-	base_service.save_csv(slashingps, 'slashingp')
-	base_service.save_csv(cmts, 'committee')
-	print('end, time is {:.3f}s'.format(time.time() - begin_time))
-
+	print('begin')
+	print(api.get_committee(20))
+	print('time is {:.3f}s'.format(time.time() - begin_time))

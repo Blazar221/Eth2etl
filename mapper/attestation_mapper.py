@@ -1,4 +1,5 @@
 from domain.attestation import Attestation
+from base64 import standard_b64decode
 
 
 def json_item_to_attestation(json_item):
@@ -17,7 +18,7 @@ def json_item_to_attestation(json_item):
     attestation.target_epoch = raw_data['target']['epoch']
     attestation.target_root = raw_data['target']['root']
 
-    attestation.signature = raw_data['signature']
+    attestation.signature = json_item['signature']
 
     return attestation
 
@@ -31,6 +32,7 @@ def hex_to_aggregation_bits(hex_aggregation_bits):
     return aggregation_bits
 
 
+# The correctness of the base64 decode is not verified yet
 def to_binary(hex_data):
     if hex_data is None or len(hex_data) == 0:
         return hex_data
@@ -38,7 +40,7 @@ def to_binary(hex_data):
     if hex_data.startswith('0x'):
         hex_data = hex_data[2:]
 
-    b = bytearray.fromhex(hex_data)
+    b = standard_b64decode(hex_data)
 
     binary = bin(int.from_bytes(b, byteorder='little'))
 
