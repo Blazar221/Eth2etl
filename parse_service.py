@@ -79,7 +79,8 @@ def json_to_slashinga_array(json, block_root):
 	return res
 	
 
-# Parse raw json from prysm api to block array, and extract the attached data like deposit, exiting, slashing attesters and slashing proposers
+# Parse raw json from prysm api to block array, and extract the attached data like deposit, exiting,
+# slashing attesters and slashing proposers
 def json_to_block_array(json):
 	res = []
 	for each in json['blockContainers']:

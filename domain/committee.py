@@ -11,4 +11,4 @@ class Committee:
                 self.epoch_timestamp,
                 self.slot,
                 self.index,
-                self.committee)
+                *self.committee)

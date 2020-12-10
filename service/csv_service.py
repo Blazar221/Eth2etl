@@ -33,6 +33,16 @@ def save_blocks(blocks, slot_head, slot_end):
     _save_csv(f'voluntary_exits_{file_slot_id}', voluntary_exit_data)
 
 
+def save_committees(committees, epoch_head, epoch_end):
+    committee_data = [cmt.csv_format() for cmt in committees]
+    _save_csv(f'committees_{epoch_head}_{epoch_end}', committee_data)
+
+
+def save_validators(validators, epoch):
+    validator_data = [vld.csv_format() for vld in validators]
+    _save_csv(f"validators_{epoch}", validator_data)
+
+
 def _append_field(field: tuple, extra: tuple):
     return (*field, *extra)
 
