@@ -1,5 +1,4 @@
 import requests
-from multiprocessing import Pool
 from config import PRYSM_ADDRESS as ADDRESS
 
 session = requests.Session()
@@ -14,23 +13,26 @@ def get_block(slot, page_token=None):
 
 def get_validator(epoch, page_token=None):
     if page_token:
-        return __vld_task(epoch, page_token)
-    with Pool(processes=2) as p:
-        return p.starmap(__vld_task, [(epoch, page) for page in range(20)])
-
-
-def __vld_task(epoch, page_token=None):
-    url = f'{ADDRESS}/eth/v1alpha1/validators?epoch={epoch}'
-    if page_token:
-        url = f'{url}&page_token={page_token}'
-    return _make_vld_request(url, page_token)
+        return [_vld_task(epoch, page_token)]
+    resp_array = []
+    resp = _vld_task(epoch)
+    #while resp['nextPageToken']:
+    #    resp_array.append(resp)
+    #    resp = _vld_task(epoch, resp['nextPageToken'])
+    resp_array.append(resp)
+    return resp_array
 
 
 def get_validator_balance(epoch, page_token=None):
-    url = f'{ADDRESS}/eth/v1alpha1/validators/balances?epoch={epoch}'
     if page_token:
-        url = f'{url}&page_token={page_token}'
-    return _make_get_request(url)
+        return [_vld_balance_task(epoch, page_token)]
+    resp_array = []
+    resp = _vld_balance_task(epoch)
+    while resp['nextPageToken']:
+        resp_array.append(resp)
+        resp = _vld_balance_task(epoch, resp['nextPageToken'])
+    resp_array.append(resp)
+    return resp_array
 
 
 def get_committee(epoch):
@@ -48,21 +50,24 @@ def get_chainhead():
     return _make_get_request(url)
 
 
-def _make_vld_request(url, page):
-    resp = session.get(url)
-    if resp.status_code == 200:
-        print(f'success at page{page}')
-        return resp.json()
-    else:
-        print(f'fail at page{page}:{resp.status_code}')
-        return {}
+def _vld_task(epoch, page_token=None):
+    url = f'{ADDRESS}/eth/v1alpha1/validators?epoch={epoch}'
+    if page_token:
+        url = f'{url}&page_token={page_token}'
+    return _make_get_request(url)
+
+
+def _vld_balance_task(epoch, page_token=None):
+    url = f'{ADDRESS}/eth/v1alpha1/validators/balances?epoch={epoch}'
+    if page_token:
+        url = f'{url}&page_token={page_token}'
+    return _make_get_request(url)
 
 
 def _make_get_request(url):
     resp = session.get(url)
     if resp.status_code == 200:
-        print('success')
         return resp.json()
     else:
-        print(resp.status_code)
+        print(f'failed on {url} with code:{resp.status_code}')
         return {}

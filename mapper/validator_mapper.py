@@ -3,7 +3,7 @@ from domain.validator import Validator
 
 def json_array_to_validators(json_vld_array, json_balance_array):
     validators = []
-    #balance_dict = _get_balance_dict(json_balance_array)
+    balance_dict = _get_balance_dict(json_balance_array)
     for item in json_vld_array:
         validator = Validator()
 
@@ -11,8 +11,7 @@ def json_array_to_validators(json_vld_array, json_balance_array):
 
         validator.pubkey = vld_data['publicKey']
         validator.validator_index = int(item['index'])
-        #validator.balance = balance_dict[item['index']]
-        validator.balance = 21
+        validator.balance = balance_dict[item['index']]
         validator.withdrawal_credentials = vld_data['withdrawalCredentials']
         validator.effective_balance = vld_data['effectiveBalance']
         validator.slashed = vld_data['slashed']
