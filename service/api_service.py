@@ -16,9 +16,9 @@ def get_validator(epoch, page_token=None):
         return [_vld_task(epoch, page_token)]
     resp_array = []
     resp = _vld_task(epoch)
-    #while resp['nextPageToken']:
-    #    resp_array.append(resp)
-    #    resp = _vld_task(epoch, resp['nextPageToken'])
+    while resp['nextPageToken']:
+        resp_array.append(resp)
+        resp = _vld_task(epoch, resp['nextPageToken'])
     resp_array.append(resp)
     return resp_array
 
@@ -69,5 +69,5 @@ def _make_get_request(url):
     if resp.status_code == 200:
         return resp.json()
     else:
-        print(f'failed on {url} with code:{resp.status_code}')
+        print(f'failed on {url} with code:{resp.status_code}, {resp.json()}')
         return {}
