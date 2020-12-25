@@ -18,21 +18,22 @@ def save_block(block, slot):
     voluntary_exit_data = [_append_field(voluntary_exit.csv_format(), extra_field) for voluntary_exit
                            in block.voluntary_exits]
 
-    _save_csv(f'blocks_{slot}', block_data)
-    _save_csv(f'attestations_{slot}', attestation_data)
-    _save_csv(f'attester_slashings_{slot}', attester_slashing_data)
-    _save_csv(f'deposits_{slot}', deposit_data)
-    _save_csv(f'proposer_slashings_{slot}', proposer_slashing_data)
-    _save_csv(f'voluntary_exits_{slot}', voluntary_exit_data)
+    _save_csv(f'blocks/blocks_{slot}', [block_data])
+    _save_csv(f'blocks/attestations_{slot}', attestation_data)
+    _save_csv(f'blocks/attester_slashings_{slot}', attester_slashing_data)
+    _save_csv(f'blocks/deposits_{slot}', deposit_data)
+    _save_csv(f'blocks/proposer_slashings_{slot}', proposer_slashing_data)
+    _save_csv(f'blocks/voluntary_exits_{slot}', voluntary_exit_data)
 
 
 def save_committees(committees, epoch):
-    _save_csv(f'committees_{epoch}', committees.csv_format())
+    committee_data = [cmt.csv_format() for cmt in committees]
+    _save_csv(f'committees/committees_{epoch}', committee_data)
 
 
 def save_validators(validators, epoch):
     validator_data = [vld.csv_format() for vld in validators]
-    _save_csv(f"validators_{epoch}", validator_data)
+    _save_csv(f"validators/validators_{epoch}", validator_data)
 
 
 def _append_field(field: tuple, extra: tuple):
