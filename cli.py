@@ -1,4 +1,4 @@
-from service.base_service import extract_block, extract_committee, extract_validator
+from service.base_service import extract_block, extract_committee, extract_validator, quest_genesis, quest_chainhead
 
 
 def cli(argv):
@@ -13,6 +13,10 @@ def cli(argv):
 		extract_validator(value)
 	elif 'extract_committee' == command:
 		extract_committee(value)
+	elif 'quest_genesis' == command:
+		quest_genesis()
+	elif 'quest_chainhead' == command:
+		quest_chainhead()
 	else:
 		print(f'Command not found:{command}')
 

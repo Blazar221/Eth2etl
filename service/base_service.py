@@ -1,7 +1,7 @@
 from mapper.beacon_block_mapper import json_to_single_block
 from mapper.committee_mapper import json_to_committees
 from mapper.validator_mapper import json_array_to_validators
-from service.api_service import get_block, get_committee, get_validator, get_validator_balance
+from service.api_service import get_block, get_committee, get_validator, get_validator_balance, get_genesis_detail, get_chainhead
 from service.csv_service import save_block, save_committees, save_validators
 from time import time
 
@@ -30,3 +30,11 @@ def extract_validator(epoch):
     validators = json_array_to_validators(raw_vld, raw_balance)
     save_validators(validators, epoch)
     print(f'Time cost on extracting validators at epoch{epoch}:{time() - begin}s')
+
+
+def quest_genesis():
+    print(get_genesis_detail())
+
+
+def quest_chainhead():
+    print(get_chainhead())
