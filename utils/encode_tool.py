@@ -10,3 +10,12 @@ def safe_url_base64(base64):
 # saving it, '=' at the end of the string should be eliminated.
 def db_parse(s):
     return s[:-1] if s[-1] == '=' else s
+
+
+def concat_array(array):
+    if array:
+        res = array[0]
+        for i in range(1, len(array)):
+            res = res + '#' + array[i]
+        return res
+    return ''

@@ -1,17 +1,10 @@
 import time
 from constant import SECOND_PER_SLOT, SLOT_PER_EPOCH
 from config import GENESIS_TIMESTAMP
-from service.api_service import get_genesis_detail
-
-OFFSET_SECONDS_CHINA_FROM_UTC = 8 * 60 * 60
-
-'''
-GENESIS_TIMESTAMP = time.mktime(
-    time.strptime(get_genesis_detail()['genesisTime'], '%Y-%m-%dT%H:%M:%SZ'))
-'''
 
 
 def get_day_slot(slot: int):
+    print(time.strftime('%Y-%m-%d %HH:%MM:%SS', time.localtime(get_timestamp_slot(slot))))
     return time.strftime('%Y-%m-%d', time.localtime(get_timestamp_slot(slot)))
 
 
@@ -25,4 +18,9 @@ def get_timestamp_slot(slot: int):
 
 def get_timestamp_epoch(epoch: int):
     return GENESIS_TIMESTAMP + epoch * SECOND_PER_SLOT * SLOT_PER_EPOCH
+
+
+def check_genesis_time():
+    genesis_time = '2020-12-01 12:00:23'
+    return genesis_time == time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(GENESIS_TIMESTAMP))
 

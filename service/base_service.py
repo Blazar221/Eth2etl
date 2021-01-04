@@ -3,6 +3,7 @@ from mapper.committee_mapper import json_to_committees
 from mapper.validator_mapper import json_array_to_validators
 from service.api_service import get_block, get_committee, get_validator, get_validator_balance, get_genesis_detail, get_chainhead
 from service.csv_service import save_block, save_committees, save_validators
+from utils.time_util import check_genesis_time
 from time import time
 
 
@@ -38,3 +39,7 @@ def quest_genesis():
 
 def quest_chainhead():
     print(get_chainhead())
+
+
+def check_time():
+    print(check_genesis_time())

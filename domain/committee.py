@@ -1,3 +1,6 @@
+from utils.encode_tool import concat_array
+
+
 class Committee:
     def __init__(self):
         self.epoch = None
@@ -11,4 +14,4 @@ class Committee:
                 self.epoch_timestamp,
                 self.slot,
                 self.index,
-                *self.committee)
+                concat_array(self.committee))
