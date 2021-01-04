@@ -1,7 +1,6 @@
 SECOND_PER_SLOT = 12
 SLOT_PER_EPOCH = 32
 
-	
 
 
 

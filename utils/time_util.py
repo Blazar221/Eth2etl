@@ -4,7 +4,6 @@ from config import GENESIS_TIMESTAMP
 
 
 def get_day_slot(slot: int):
-    print(time.strftime('%Y-%m-%d %HH:%MM:%SS', time.localtime(get_timestamp_slot(slot))))
     return time.strftime('%Y-%m-%d', time.localtime(get_timestamp_slot(slot)))
 
 

@@ -5,9 +5,9 @@ session = requests.Session()
 
 
 def get_block(slot, page_token=None):
-    url = f'{ADDRESS}/eth/v1alpha1/beacon/blocks?slot={slot}'
+    url = '{}/eth/v1alpha1/beacon/blocks?slot={}'.format(ADDRESS, slot)
     if page_token:
-        url = f'{url}&page_token={page_token}'
+        url = '{}&page_token={}'.format(url, page_token)
     return _make_get_request(url)
 
 
@@ -36,31 +36,31 @@ def get_validator_balance(epoch, page_token=None):
 
 
 def get_committee(epoch):
-    url = f'{ADDRESS}/eth/v1alpha1/beacon/committees?epoch={epoch}'
+    url = '{}/eth/v1alpha1/beacon/committees?epoch={}'.format(ADDRESS, epoch)
     return _make_get_request(url)
 
 
 def get_genesis_detail():
-    url = f'{ADDRESS}/eth/v1alpha1/node/genesis'
+    url = '{}/eth/v1alpha1/node/genesis'.format(ADDRESS)
     return _make_get_request(url)
 
 
 def get_chainhead():
-    url = f'{ADDRESS}/eth/v1alpha1/beacon/chainhead/stream'
+    url = '{}/eth/v1alpha1/beacon/chainhead/stream'.format(ADDRESS)
     return _make_get_request(url)
 
 
 def _vld_task(epoch, page_token=None):
-    url = f'{ADDRESS}/eth/v1alpha1/validators?epoch={epoch}'
+    url = '{}/eth/v1alpha1/validators?epoch={}'.format(ADDRESS, epoch)
     if page_token:
-        url = f'{url}&page_token={page_token}'
+        url = '{}&page_token={}'.format(url, page_token)
     return _make_get_request(url)
 
 
 def _vld_balance_task(epoch, page_token=None):
-    url = f'{ADDRESS}/eth/v1alpha1/validators/balances?epoch={epoch}'
+    url = '{}/eth/v1alpha1/validators/balances?epoch={}'.format(ADDRESS, epoch)
     if page_token:
-        url = f'{url}&page_token={page_token}'
+        url = '{}&page_token={}'.format(url, page_token)
     return _make_get_request(url)
 
 
@@ -69,5 +69,5 @@ def _make_get_request(url):
     if resp.status_code == 200:
         return resp.json()
     else:
-        print(f'failed on {url} with code:{resp.status_code}, {resp.json()}')
+        print('failed on {} with code:{}, {}'.format(url, resp.status_code, resp.json()))
         return {}

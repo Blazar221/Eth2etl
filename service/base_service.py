@@ -10,14 +10,14 @@ from time import time
 def extract_block(slot):
     begin = time()
     save_block(json_to_single_block(get_block(slot), slot), slot)
-    print(f'Time cost on extracting block on slot{slot}:{time() - begin}s')
+    print('Time cost on extracting block on slot{}:{}s'.format(slot, time()-begin))
 
 
 def extract_committee(epoch):
     begin = time()
     committees = json_to_committees(get_committee(epoch), epoch)
     save_committees(committees, epoch)
-    print(f'Time cost on extracting committees on epoch{epoch}:{time() - begin}s')
+    print('Time cost on extracting committees on epoch{}:{}s'.format(epoch, time()-begin))
 
 
 def extract_validator(epoch):
@@ -30,7 +30,7 @@ def extract_validator(epoch):
         raw_balance.extend(page['balances'])
     validators = json_array_to_validators(raw_vld, raw_balance)
     save_validators(validators, epoch)
-    print(f'Time cost on extracting validators at epoch{epoch}:{time() - begin}s')
+    print('Time cost on extracting validators at epoch{}:{}s'.format(epoch, time()-begin))
 
 
 def quest_genesis():
