@@ -21,24 +21,24 @@ def save_block(block, slot):
     voluntary_exit_data = [_append_field(voluntary_exit.csv_format(), extra_field) for voluntary_exit
                            in block.voluntary_exits]
 
-    _save_csv(f'blocks_{slot}_{day}', [block_data])
-    _save_csv(f'attestations_{slot}_{day}', attestation_data)
-    _save_csv(f'attester_slashings_{slot}_{day}', attester_slashing_data)
-    _save_csv(f'deposits_{slot}_{day}', deposit_data)
-    _save_csv(f'proposer_slashings_{slot}_{day}', proposer_slashing_data)
-    _save_csv(f'voluntary_exits_{slot}_{day}', voluntary_exit_data)
+    _save_csv('blocks_{}_{}'.format(slot, day), [block_data])
+    _save_csv('attestations_{}_{}'.format(slot, day), attestation_data)
+    _save_csv('attester_slashings_{}_{}'.format(slot, day), attester_slashing_data)
+    _save_csv('deposits_{}_{}'.format(slot, day), deposit_data)
+    _save_csv('proposer_slashings_{}_{}'.format(slot, day), proposer_slashing_data)
+    _save_csv('voluntary_exits_{}_{}'.format(slot, day), voluntary_exit_data)
 
 
 def save_committees(committees, epoch):
     day = get_day_epoch(epoch)
     committee_data = [cmt.csv_format() for cmt in committees]
-    _save_csv(f'committees_{epoch}_{day}', committee_data)
+    _save_csv('committees_{}_{}'.format(epoch, day), committee_data)
 
 
 def save_validators(validators, epoch):
     day = get_day_epoch(epoch)
     validator_data = [vld.csv_format() for vld in validators]
-    _save_csv(f"validators_{epoch}_{day}", validator_data)
+    _save_csv('validators_{}_{}'.format(epoch, day), validator_data)
 
 
 def _append_field(field: tuple, extra: tuple):
