@@ -16,6 +16,6 @@ def concat_array(array):
     if array:
         res = array[0]
         for i in range(1, len(array)):
-            res = res + '#' + array[i]
+            res = '{}#{}'.format(res, array[i])
         return res
     return ''
