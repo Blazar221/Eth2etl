@@ -37,7 +37,7 @@ def save_committees(committees, epoch):
 
 def save_validators(validators, epoch):
     day = get_day_epoch(epoch)
-    validator_data = [vld.csv_format() for vld in validators]
+    validator_data = [(*vld.csv_format(), epoch) for vld in validators]
     _save_csv('validators_{}_{}'.format(epoch, day), validator_data)
 
 
