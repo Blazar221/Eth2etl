@@ -66,8 +66,5 @@ def _vld_balance_task(epoch, page_token=None):
 
 def _make_get_request(url):
     resp = session.get(url)
-    if resp.status_code == 200:
-        return resp.json()
-    else:
-        print('failed on {} with code:{}, {}'.format(url, resp.status_code, resp.json()))
-        return {}
+    assert (resp.status_code == 200)
+    return resp.json()

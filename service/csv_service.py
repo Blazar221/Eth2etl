@@ -1,4 +1,5 @@
 import csv
+import os
 from config import CSV_PATH
 from utils.time_util import get_day_slot, get_day_epoch
 
@@ -47,7 +48,10 @@ def _append_field(field: tuple, extra: tuple):
 
 def _save_csv(filename, data):
     if data:
-        with open(CSV_PATH + filename + '.csv', 'a') as f:
+        file_prefix = CSV + filename
+        with open(file_prefix + '.part', 'w') as f:
             writer = csv.writer(f)
             for line in data:
                 writer.writerow(line)
+        os.rename(file_prefix + '.part', file_prefix + '.csv')
+

@@ -6,7 +6,7 @@ def json_item_to_attestation(json_item):
     attestation = Attestation()
 # Keep the raw aggregation_bits here, because the converting it to 01 combination is not verified yet. 
 #   attestation.aggregation_bits = hex_to_aggregation_bits(json_item['aggregationBits'])
-	attestation.aggregation_bits = json_item['aggregationBits']	
+    attestation.aggregation_bits = json_item['aggregationBits']
 
     raw_data = json_item['data']
 
