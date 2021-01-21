@@ -48,7 +48,7 @@ def _append_field(field: tuple, extra: tuple):
 
 def _save_csv(filename, data):
     if data:
-        file_prefix = CSV + filename
+        file_prefix = CSV_PATH + filename
         with open(file_prefix + '.part', 'w') as f:
             writer = csv.writer(f)
             for line in data:
