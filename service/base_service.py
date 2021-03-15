@@ -1,15 +1,24 @@
-from mapper.beacon_block_mapper import json_to_single_block
+from mapper.beacon_block_mapper import create_block, create_missed_block
 from mapper.committee_mapper import json_to_committees
 from mapper.validator_mapper import json_array_to_validators
 from service.api_service import get_block, get_committee, get_validator, get_validator_balance, get_genesis_detail, get_chainhead
-from service.csv_service import save_block, save_committees, save_validators
+from service.csv_service import save_block, save_committees, save_validators, save_multiple_block
 from utils.time_util import check_genesis_time
 from time import time
 
 
 def extract_block(slot):
     begin = time()
-    save_block(json_to_single_block(get_block(slot), slot), slot)
+    container = get_block(slot)['blockContainers']
+    if 0 == len(container):
+      save_block(create_missed_block(slot), slot)
+    elif 1 == len(container):
+      save_block(create_block(container[0]), slot)
+    else:
+      blocks = []
+      for each in container:
+        blocks.append(create_block(each))
+      save_multiple_block(blocks, slot)
     print('Time cost on extracting block on slot{}:{}s'.format(slot, time()-begin))
 
 

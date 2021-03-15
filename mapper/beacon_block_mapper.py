@@ -8,15 +8,6 @@ from constant import SLOT_PER_EPOCH
 from utils.time_util import get_timestamp_slot
 
 
-def json_to_single_block(json, slot):
-    container = json['blockContainers']
-    if 0 == len(container):
-        return create_missed_block(slot)
-    else:
-        assert (1 == len(container))
-        return create_block(container[0])
-
-
 def create_block(json_item):
     block = BeaconBlock()
     block_outer = json_item['block']
