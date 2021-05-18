@@ -46,7 +46,7 @@ def get_genesis_detail():
 
 
 def get_chainhead():
-    url = '{}/eth/v1alpha1/beacon/chainhead/stream'.format(ADDRESS)
+    url = '{}/eth/v1alpha1/beacon/chainhead'.format(ADDRESS)
     return _make_get_request(url)
 
 
