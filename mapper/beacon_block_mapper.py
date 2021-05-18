@@ -53,3 +53,4 @@ def create_missed_block(slot):
     block.block_timestamp = get_timestamp_slot(slot)
     block.skipped = True
     return block
+

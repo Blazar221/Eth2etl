@@ -29,6 +29,39 @@ def save_block(block, slot):
     _save_csv('proposer_slashings_{}_{}'.format(slot, day), proposer_slashing_data)
     _save_csv('voluntary_exits_{}_{}'.format(slot, day), voluntary_exit_data)
     
+<<<<<<< HEAD
+=======
+
+def save_multiple_block(blocks, slot):
+    day = get_day_slot(slot)
+    block_data = []
+    attestation_data = []
+    attester_slashing_data = []
+    deposit_data = []
+    proposer_slashing_data = []
+    voluntary_exit_data = []
+    
+    extra_field = (blocks[0].block_slot, blocks[0].block_timestamp)
+    for block in blocks:
+      block_data.append(block.csv_format())
+      attestation_data.extend([_append_field(attestation.csv_format(), extra_field)
+                        for attestation in block.attestations])
+      attester_slashing_data.extend([_append_field(attester_slashing.csv_format(), extra_field) for attester_slashing
+                              in block.attester_slashings])
+      deposit_data.extend([_append_field(deposit.csv_format(), extra_field) for deposit
+                    in block.deposits])
+      proposer_slashing_data.extend([_append_field(proposer_slashing.csv_format(), extra_field) for proposer_slashing
+                              in block.proposer_slashings])
+      voluntary_exit_data.extend([_append_field(voluntary_exit.csv_format(), extra_field) for voluntary_exit
+                           in block.voluntary_exits])
+
+    _save_csv('blocks_{}_{}'.format(slot, day), block_data)
+    _save_csv('attestations_{}_{}'.format(slot, day), attestation_data)
+    _save_csv('attester_slashings_{}_{}'.format(slot, day), attester_slashing_data)
+    _save_csv('deposits_{}_{}'.format(slot, day), deposit_data)
+    _save_csv('proposer_slashings_{}_{}'.format(slot, day), proposer_slashing_data)
+    _save_csv('voluntary_exits_{}_{}'.format(slot, day), voluntary_exit_data)
+>>>>>>> 80585d2d25191fb0259b97c5947a07fabea5af60
 
 def save_multiple_block(blocks, slot):
     day = get_day_slot(slot)
@@ -84,4 +117,5 @@ def _save_csv(filename, data):
             for line in data:
                 writer.writerow(line)
         os.rename(file_prefix + '.part', file_prefix + '.csv')
+
 
