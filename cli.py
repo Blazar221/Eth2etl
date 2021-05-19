@@ -8,7 +8,7 @@ HELP = 'The usage is below:\n' \
        'quest_genesis:             quest the genesis information for the current beacon chain\n' \
        'quest_chainhead:           quest the chain head information for the current beacon chain\n' \
        'check_time:                check whether the current timestamp config is right\n' \
-       'check_slot [slot]:         check whether the slot is available'
+       'check_slot [slot]:         check whether the slot is available, if not print the current head slot'
 
 
 def cli(argv):

@@ -58,4 +58,8 @@ def check_time():
 
 
 def check_slot(slot):
-    print(slot <= int(get_chainhead()['headSlot']))
+    head_slot = int(get_chainhead()['headSlot'])
+    if slot <= head_slot:
+        print('True')
+    else:
+        print(head_slot)
