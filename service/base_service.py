@@ -9,7 +9,6 @@ from time import time
 
 def extract_block(slot):
     head_slot = int(get_chainhead()['headSlot'])
-    assert slot <= head_slot, 'SlotNotCoveredError'
     begin = time()
     container = get_block(slot)['blockContainers']
     if 0 == len(container):
@@ -26,7 +25,6 @@ def extract_block(slot):
 
 def extract_committee(epoch):
     head_epoch = int(get_chainhead()['headEpoch'])
-    assert epoch <= head_epoch, 'EpochNotCoveredError'
     begin = time()
     committees = json_to_committees(get_committee(epoch), epoch)
     save_committees(committees, epoch)
@@ -35,7 +33,6 @@ def extract_committee(epoch):
 
 def extract_validator(epoch):
     head_epoch = int(get_chainhead()['headEpoch'])
-    assert epoch <= head_epoch, 'EpochNotCoveredError'
     begin = time()
     raw_vld = []
     for page in get_validator(epoch):
@@ -59,3 +56,6 @@ def quest_chainhead():
 def check_time():
     print(check_genesis_time())
 
+
+def check_slot(slot):
+    print(slot <= int(get_chainhead()['headSlot']))
