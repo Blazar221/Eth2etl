@@ -68,6 +68,6 @@ def check_slot(slot):
 def check_epoch(epoch):
     head_epoch = int(get_chainhead()['headEpoch'])
     if epoch <= head_epoch:
-        print('True')
+        print(epoch)
     else:
-        print(head_epoch)
+        print('False')

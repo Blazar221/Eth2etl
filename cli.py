@@ -9,7 +9,7 @@ HELP = 'The usage is below:\n' \
        'quest_chainhead:           quest the chain head information for the current beacon chain\n' \
        'check_time:                check whether the current timestamp config is right\n' \
        'check_slot [slot]:         check whether the slot is available, if not, print the current head slot\n' \
-       'check_epoch [epoch]:       check whether the epoch is available, if not, print the current head epoch'
+       'check_epoch [epoch]:       check whether the epoch is available, if not, print False'
 
 
 def cli(argv):
